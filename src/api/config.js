@@ -1,5 +1,5 @@
 // Default Theme
-const DEFAULT_THEME = "corporate";
+const DEFAULT_THEME = "cupcake";
 
 // KittyChef Version
 export const VERSION = "0.0.1";

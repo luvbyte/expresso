@@ -4,14 +4,14 @@
 
   // Daisyui themes
   const themes = [
-    "coffee",
+    "cupcake",
     "corporate",
     "dim",
     "valentine",
     "dracula",
     "light",
     "dark",
-    "cupcake",
+    "coffee",
     "black",
     "retro",
     "halloween",

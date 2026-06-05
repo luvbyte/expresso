@@ -1,45 +1,61 @@
 <template>
   <div
-    class="fixed inset-0 z-60 bg-black/60 flex flex-col gap-3 items-center justify-center p-4"
+    class="fixed inset-0 z-60 bg-black/80 backdrop-blur-md p-4 md:flex md:place-items-center"
     @click="emit('close')"
   >
-    <div class="relative max-w-5xl max-h-full" @click.stop>
+    <div class="relative max-w-6xl w-full flex justify-center pt-8 md:pt-0" @click.stop>
+      <!-- Image -->
       <img
         :src="selected.file_url"
         :alt="selected.title"
-        class="max-h-[90vh] max-w-full rounded-lg shadow-2xl"
+        class="max-h-[90vh] max-w-full rounded-2xl shadow-[0_20px_80px_rgba(0,0,0,0.6)] object-contain"
       />
+    </div>
+    <!-- Floating Actions -->
+    <div class="absolute p-4 bottom-2 left-0 flex flex-col w-full gap-2">
+      <div class="flex justify-center gap-2 z-20">
+        <button
+          @click="shareMedia"
+          class="btn btn-sm bg-info text-white border-none shadow-lg"
+        >
+          Share
+        </button>
 
+        <button
+          @click="downloadMedia"
+          class="btn btn-sm bg-primary text-white border-none shadow-lg"
+        >
+          Download
+        </button>
+      </div>
+      <!-- Info Card -->
       <div
-        class="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-3 rounded-b-lg"
+        class="rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 p-4 text-white"
       >
-        <h2 v-if="selected.title.length > 0" class="font-bold">
+        <h2
+          v-if="selected.title"
+          class="text-xl md:text-2xl font-bold tracking-tight"
+        >
           {{ selected.title }}
         </h2>
-        <p class="text-sm opacity-80">
+
+        <p class="text-sm text-white/80 mt-1">
           by
-          <span class="text-info">
-            {{ selected.author.length > 0 ? selected.author : "Anonymous" }}
+          <span class="font-medium text-cyan-300">
+            {{ selected.author || "Anonymous" }}
           </span>
         </p>
 
-        <div class="flex flex-wrap gap-1 mt-2">
+        <div v-if="selected.tags?.length" class="flex flex-wrap gap-2 mt-3">
           <span
             v-for="tag in selected.tags"
             :key="tag"
-            class="badge badge-outline badge-sm text-white"
+            class="px-2 py-1 rounded-full text-xs bg-white/10 border border-white/20 hover:bg-white/20 transition"
           >
             #{{ tag }}
           </span>
         </div>
       </div>
-    </div>
-
-    <div class="p-2 flex gap-2">
-      <button @click="shareMedia" class="btn btn-sm btn-info">Share</button>
-      <button @click="downloadMedia" class="btn btn-sm btn-primary">
-        Download
-      </button>
     </div>
   </div>
 </template>
