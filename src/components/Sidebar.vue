@@ -2,6 +2,9 @@
   import { ref, onMounted, onBeforeMount } from "vue";
   import { getTheme, applyTheme, VERSION } from "@/api/config";
 
+  import { usePWAInstall } from "@/composables/usePWAInstall";
+  const { installPWA, isInstallable } = usePWAInstall();
+
   // Daisyui themes
   const themes = [
     "cupcake",
@@ -52,7 +55,9 @@
 </script>
 
 <template>
-  <div class="h-full w-[80%] md:w-[60%] bg-base-100 shadow-2xl flex flex-col py-4">
+  <div
+    class="h-full w-[80%] md:w-[60%] bg-base-100 shadow-2xl flex flex-col py-4"
+  >
     <div class="relative flex-1 flex flex-col gap-2">
       <!-- Top -->
       <div class="w-full flex flex-col gap-2 justify-center items-center">
@@ -62,6 +67,160 @@
         </div>
         <h1>Expresso 彡 {{ VERSION }}</h1>
       </div>
+      
+            <!-- PWA Install button -->
+      <div
+        v-if="isInstallable"
+        @click="installPWA"
+        class="flex justify-between items-center bg-primary text-primary-content glass rounded-lg shadow-primary/50 p-2 gap-2"
+      >
+        <h1>Install App</h1>
+        <span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+          >
+            <path fill="currentColor" d="M4 16h4v4H4V16z" class="st0">
+              <animate
+                fill="remove"
+                accumulate="none"
+                additive="replace"
+                attributeName="opacity"
+                begin=".2"
+                calcMode="linear"
+                dur="3s"
+                keyTimes="0;0.9;1"
+                repeatCount="indefinite"
+                restart="always"
+                values="1;0;0"
+              />
+            </path>
+            <path fill="currentColor" d="M10 16h4v4h-4V16z" class="st0">
+              <animate
+                fill="remove"
+                accumulate="none"
+                additive="replace"
+                attributeName="opacity"
+                begin=".4"
+                calcMode="linear"
+                dur="3s"
+                keyTimes="0;0.9;1"
+                repeatCount="indefinite"
+                restart="always"
+                values="1;0;0"
+              />
+            </path>
+            <path fill="currentColor" d="M16 16h4v4h-4V16z" class="st0">
+              <animate
+                fill="remove"
+                accumulate="none"
+                additive="replace"
+                attributeName="opacity"
+                begin=".6"
+                calcMode="linear"
+                dur="3s"
+                keyTimes="0;0.9;1"
+                repeatCount="indefinite"
+                restart="always"
+                values="1;0;0"
+              />
+            </path>
+            <path fill="currentColor" d="M4 10h4v4H4V10z" class="st0">
+              <animate
+                fill="remove"
+                accumulate="none"
+                additive="replace"
+                attributeName="opacity"
+                begin=".8"
+                calcMode="linear"
+                dur="3s"
+                keyTimes="0;0.9;1"
+                repeatCount="indefinite"
+                restart="always"
+                values="1;0;0"
+              />
+            </path>
+            <path fill="currentColor" d="M10 10h4v4h-4V10z" class="st0">
+              <animate
+                fill="remove"
+                accumulate="none"
+                additive="replace"
+                attributeName="opacity"
+                begin="1"
+                calcMode="linear"
+                dur="3s"
+                keyTimes="0;0.9;1"
+                repeatCount="indefinite"
+                restart="always"
+                values="1;0;0"
+              />
+            </path>
+            <path fill="currentColor" d="M16 10h4v4h-4V10z" class="st0">
+              <animate
+                fill="remove"
+                accumulate="none"
+                additive="replace"
+                attributeName="opacity"
+                begin="1.2"
+                calcMode="linear"
+                dur="3s"
+                keyTimes="0;0.9;1"
+                repeatCount="indefinite"
+                restart="always"
+                values="1;0;0"
+              />
+            </path>
+            <path fill="currentColor" d="M4 4h4v4H4V4z" class="st0">
+              <animate
+                fill="remove"
+                accumulate="none"
+                additive="replace"
+                attributeName="opacity"
+                begin="1.4"
+                calcMode="linear"
+                dur="3s"
+                keyTimes="0;0.9;1"
+                repeatCount="indefinite"
+                restart="always"
+                values="1;0;0"
+              />
+            </path>
+            <path fill="currentColor" d="M10 4h4v4h-4V4z" class="st0">
+              <animate
+                fill="remove"
+                accumulate="none"
+                additive="replace"
+                attributeName="opacity"
+                begin="1.6"
+                calcMode="linear"
+                dur="3s"
+                keyTimes="0;0.9;1"
+                repeatCount="indefinite"
+                restart="always"
+                values="1;0;0"
+              />
+            </path>
+            <path fill="currentColor" d="M16 4h4v4h-4V4z" class="st0">
+              <animate
+                fill="remove"
+                accumulate="none"
+                additive="replace"
+                attributeName="opacity"
+                begin="1.8"
+                calcMode="linear"
+                dur="3s"
+                keyTimes="0;0.9;1"
+                repeatCount="indefinite"
+                restart="always"
+                values="1;0;0"
+              />
+            </path>
+          </svg>
+        </span>
+      </div>
+
 
       <!-- themes -->
       <div class="flex flex-col overflow-hidden text-xs">
