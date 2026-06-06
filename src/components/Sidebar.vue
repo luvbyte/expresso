@@ -56,7 +56,7 @@
 
 <template>
   <div
-    class="h-full w-[80%] md:w-[60%] bg-base-100 shadow-2xl flex flex-col py-4"
+    class="p-2 h-full w-[80%] md:w-[60%] bg-base-100 shadow-2xl flex flex-col py-4"
   >
     <div class="relative flex-1 flex flex-col gap-2">
       <!-- Top -->
@@ -67,8 +67,8 @@
         </div>
         <h1>Expresso 彡 {{ VERSION }}</h1>
       </div>
-      
-            <!-- PWA Install button -->
+
+      <!-- PWA Install button -->
       <div
         v-if="isInstallable"
         @click="installPWA"
@@ -220,7 +220,6 @@
           </svg>
         </span>
       </div>
-
 
       <!-- themes -->
       <div class="flex flex-col overflow-hidden text-xs">
