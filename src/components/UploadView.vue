@@ -9,13 +9,33 @@
   const form = ref({
     title: "",
     author: "",
-    tags: "",
+    tags: [],
     file: null
   });
 
   const errors = ref({
     title: ""
   });
+
+  const tagInput = ref("");
+
+  const addTag = () => {
+    tagInput.value
+      .split(",")
+      .map(tag => tag.trim().toLowerCase())
+      .filter(Boolean)
+      .forEach(tag => {
+        if (!form.value.tags.includes(tag)) {
+          form.value.tags.push(tag);
+        }
+      });
+
+    tagInput.value = "";
+  };
+
+  const removeTag = index => {
+    form.value.tags.splice(index, 1);
+  };
 
   const preview = ref(null);
 
@@ -57,9 +77,6 @@
         title: form.value.title,
         author: form.value.author,
         tags: form.value.tags
-          .split(",")
-          .map(tag => tag.trim())
-          .filter(Boolean)
       });
 
       location.reload();
@@ -102,7 +119,7 @@
               v-model="form.title"
               type="text"
               maxlength="100"
-              class="input input-bordered w-full placeholder:opacity-60"
+              class="input input-bordered w-full focus:outline-none placeholder:opacity-60"
               placeholder="Funny Cat Meme"
             />
 
@@ -123,22 +140,46 @@
               <input
                 v-model="form.author"
                 type="text"
-                class="input input-bordered w-full placeholder:opacity-60"
+                class="input input-bordered w-full focus:outline-none placeholder:opacity-60"
                 placeholder="Your name"
               />
             </div>
 
-            <div>
-              <label class="label">
-                <span class="label-text"> Tags </span>
-              </label>
+            <div class="space-y-2">
+              <!-- Tags -->
+              <div v-if="form.tags.length" class="flex flex-wrap gap-2">
+                <div
+                  v-for="(tag, index) in form.tags"
+                  :key="tag"
+                  class="badge badge-primary gap-2 py-3"
+                >
+                  {{ tag }}
 
-              <input
-                v-model="form.tags"
-                type="text"
-                class="input input-bordered w-full placeholder:opacity-60"
-                placeholder="cat, funny, meme"
-              />
+                  <button type="button" @click="removeTag(index)">✕</button>
+                </div>
+              </div>
+
+              <!-- Input + Add Button -->
+              <div class="flex gap-2">
+                <input
+                  v-model="tagInput"
+                  type="text"
+                  class="input input-bordered flex-1 focus:outline-none"
+                  placeholder="Add a tag"
+                  @keydown.enter.prevent="addTag"
+                />
+
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  :disabled="!tagInput.trim()"
+                  @click="addTag"
+                >
+                  Add
+                </button>
+              </div>
+
+              <p class="text-xs opacity-60">Press Enter or tap Add</p>
             </div>
           </div>
 
@@ -166,6 +207,7 @@
                 <p class="font-semibold">Click to upload</p>
 
                 <p class="text-sm opacity-60">PNG, GIF or WEBP</p>
+                <p class="text-sm opacity-40">3 MB Max Size</p>
               </div>
 
               <input

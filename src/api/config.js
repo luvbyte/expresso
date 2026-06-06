@@ -2,7 +2,7 @@
 const DEFAULT_THEME = "cupcake";
 
 // KittyChef Version
-export const VERSION = "0.0.1";
+export const VERSION = "0.0.2";
 
 // Get theme from localStorage or Default Theme
 export function getTheme() {

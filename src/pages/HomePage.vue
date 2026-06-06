@@ -28,12 +28,30 @@
       </div>
     </div>
     <!-- Search -->
-    <div>
+    <div class="relative">
       <input
         v-model="search"
         class="w-full input input-sm rounded focus:outline-none placeholder:opacity-60"
         placeholder="Search by user / tag / title"
       />
+      <div
+        v-if="search.length > 0"
+        @click="search = ''"
+        class="absolute right-2 top-2"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="1em"
+          height="1em"
+          viewBox="0 0 24 24"
+        >
+          <path d="M0 0h24v24H0z" fill="none" />
+          <path
+            fill="currentColor"
+            d="m12 13.4l-4.9 4.9q-.275.275-.7.275t-.7-.275t-.275-.7t.275-.7l4.9-4.9l-4.9-4.9q-.275-.275-.275-.7t.275-.7t.7-.275t.7.275l4.9 4.9l4.9-4.9q.275-.275.7-.275t.7.275t.275.7t-.275.7L13.4 12l4.9 4.9q.275.275.275.7t-.275.7t-.7.275t-.7-.275z"
+          />
+        </svg>
+      </div>
     </div>
     <!-- Media Grid -->
     <div class="flex-1 overflow-y-auto" ref="scrollContainer">
@@ -43,6 +61,7 @@
           :key="file.id"
           :file="file"
           @select="file => (selected = file)"
+          @search="text => (search = text)"
         />
       </div>
 
@@ -117,7 +136,6 @@
 
   const showSidebar = ref(false);
 
-  let observer;
   const selected = ref(null);
   const uploader = ref(false);
 
@@ -130,24 +148,33 @@
 
   const search = ref("");
 
+  let observer;
   // debounce timer
   let searchTimeout;
 
   async function handleSearch(query) {
-    if (!query) {
     files.value = [];
+    cursor.value = null;
+    hasMore.value = true;
+
+    if (!query) {
       await loadInitial();
       return;
     }
 
-    files.value = [];
     loading.value = true;
 
-    files.value = await searchMedia({
-      query
-    });
+    try {
+      const result = await searchMedia({
+        query
+      });
 
-    loading.value = false;
+      files.value = result.items;
+      cursor.value = result.cursor;
+      hasMore.value = result.hasMore;
+    } finally {
+      loading.value = false;
+    }
   }
 
   watch(search, value => {
@@ -173,12 +200,20 @@
   async function loadMore() {
     if (loading.value) return;
     if (!hasMore.value) return;
-    if (!cursor.value) return;
 
     loading.value = true;
 
     try {
-      const result = await loadMoreMedia(cursor.value);
+      let result;
+
+      if (search.value.trim()) {
+        result = await searchMedia({
+          query: search.value.trim(),
+          cursor: cursor.value
+        });
+      } else {
+        result = await loadMoreMedia(cursor.value);
+      }
 
       files.value.push(...result.items);
       cursor.value = result.cursor;
@@ -188,10 +223,12 @@
     }
   }
 
+  // let observer;
+
   onMounted(() => {
     loadInitial();
 
-    const observer = new IntersectionObserver(
+    observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           loadMore();
@@ -203,5 +240,9 @@
     );
 
     observer.observe(sentinel.value);
+  });
+
+  onUnmounted(() => {
+    observer?.disconnect();
   });
 </script>

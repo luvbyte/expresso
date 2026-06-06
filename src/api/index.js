@@ -50,9 +50,52 @@ export async function loadMoreMedia(cursor, limit = 20) {
 /**
  * Search media by title, author, tags, or type
  */
+// export async function searchMedia({
+//   query = "",
+//   type = null,
+//   limit = 50
+// } = {}) {
+//   let request = supabase
+//     .from("uploads")
+//     .select("*")
+//     .order("created_at", { ascending: false })
+//     .limit(limit);
+
+//   if (type) {
+//     request = request.eq("type", type);
+//   }
+
+//   if (query.trim()) {
+//     const q = `%${query.trim()}%`;
+//     const search = query.trim();
+
+//     request = request.or(
+//       `title.ilike.%${search}%,author.ilike.%${search}%,tags.cs.{${search}}`
+//     );
+
+//     // request = request.or(`title.ilike.${q},author.ilike.${q}`);
+//   }
+
+//   const { data, error } = await request;
+
+//   if (error) throw error;
+
+//   if (!query.trim()) return data;
+
+//   const search = query.toLowerCase();
+
+//   return data.filter(
+//     item =>
+//       item.title?.toLowerCase().includes(search) ||
+//       item.author?.toLowerCase().includes(search) ||
+//       item.tags?.some(tag => tag.toLowerCase().includes(search))
+//   );
+// }
+
 export async function searchMedia({
   query = "",
   type = null,
+  cursor = null,
   limit = 50
 } = {}) {
   let request = supabase
@@ -61,15 +104,19 @@ export async function searchMedia({
     .order("created_at", { ascending: false })
     .limit(limit);
 
+  if (cursor) {
+    request = request.lt("created_at", cursor);
+  }
+
   if (type) {
     request = request.eq("type", type);
   }
 
   if (query.trim()) {
-    const q = `%${query.trim()}%`;
+    const search = query.trim();
 
     request = request.or(
-      `title.ilike.${q},author.ilike.${q}`
+      `title.ilike.%${search}%,author.ilike.%${search}%,tags.cs.{${search}}`
     );
   }
 
@@ -77,17 +124,11 @@ export async function searchMedia({
 
   if (error) throw error;
 
-  if (!query.trim()) return data;
-
-  const search = query.toLowerCase();
-
-  return data.filter(item =>
-    item.title?.toLowerCase().includes(search) ||
-    item.author?.toLowerCase().includes(search) ||
-    item.tags?.some(tag =>
-      tag.toLowerCase().includes(search)
-    )
-  );
+  return {
+    items: data,
+    cursor: data.length ? data[data.length - 1].created_at : null,
+    hasMore: data.length === limit
+  };
 }
 
 /**
@@ -134,7 +175,7 @@ export async function uploadMedia({ file, title, author, tags = [] }) {
       title,
       author,
       type,
-      tags,
+      tags: tags.map(tag => tag.toLowerCase()),
       file_url: publicUrl,
       thumbnail_url: publicUrl
     })

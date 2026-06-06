@@ -12,11 +12,16 @@
     </figure>
 
     <div class="card-body p-3">
-      <h2 v-if="file.title.length > 0" class="font-bold">{{ file.title }}</h2>
+      <h1 v-if="file.title.length > 0" class="font-bold truncate">
+        {{ file.title }}
+      </h1>
       <p class="text-sm opacity-70">
         by
-        <span class="text-info">
-          {{ file.author.length > 0 ? file.author : "Anonymous" }}
+        <span
+          @click.stop="emit('search', file.author)"
+          class="text-info truncate"
+        >
+          @{{ file.author.length > 0 ? file.author : "Anonymous" }}
         </span>
       </p>
     </div>
@@ -25,5 +30,5 @@
 
 <script setup>
   const props = defineProps(["file"]);
-  const emit = defineEmits(["select"]);
+  const emit = defineEmits(["select", "search"]);
 </script>
