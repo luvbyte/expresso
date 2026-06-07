@@ -14,7 +14,21 @@
               @click="showSidebar = true"
               class="btn btn-circle btn-outline btn-sm"
             >
-              🎨
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+              >
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-width="3"
+                  d="M17.58 9.71a6 6 0 0 0-7.16 3.58m7.16-3.58A6 6 0 1 1 12 19.972M17.58 9.71a6 6 0 1 0-11.16 0m4 3.58A6 6 0 0 0 10 15.5c0 1.777.773 3.374 2 4.472m-1.58-6.682a6.01 6.01 0 0 1-4-3.58m0 0A6 6 0 1 0 12 19.972"
+                />
+              </svg>
             </button>
 
             <button
@@ -111,17 +125,19 @@
     <Transition name="fade-scale">
       <UploadView v-if="uploader" @close="uploader = false" />
     </Transition>
-
     <!-- Sidebar -->
-    <Transition name="slide-right">
-      <div
-        v-show="showSidebar"
-        class="fixed fscreen z-90"
-        @click.self="showSidebar = false"
-      >
-        <Sidebar />
-      </div>
-    </Transition>
+    <div
+      class="fixed inset-0 z-20 full overflow-hidden"
+      @click.self="showSidebar = false"
+      :class="{ 'pointer-events-none -z-20': !showSidebar }"
+    >
+      <!-- SIDEBAR -->
+      <Transition name="slide-right">
+        <div v-show="showSidebar" class="relative h-full w-3/4 sm:w-1/2 glass">
+          <Sidebar />
+        </div>
+      </Transition>
+    </div>
   </div>
 </template>
 

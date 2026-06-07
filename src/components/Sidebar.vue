@@ -55,9 +55,7 @@
 </script>
 
 <template>
-  <div
-    class="p-2 h-full w-[80%] md:w-[60%] bg-base-100 shadow-2xl flex flex-col py-4"
-  >
+  <div class="p-2 fscreen glass flex flex-col py-4">
     <div class="relative flex-1 flex flex-col gap-2">
       <!-- Top -->
       <div class="w-full flex flex-col gap-2 justify-center items-center">
@@ -298,7 +296,7 @@
         </svg>
       </a>
       <!-- Github -->
-      <a href="https://github.com/luvbyte/kittychef" target="_blank">
+      <a href="https://github.com/luvbyte/expresso" target="_blank">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="28"

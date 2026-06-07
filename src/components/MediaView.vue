@@ -5,19 +5,26 @@
   >
     <!-- Info Card -->
     <div
-      class="max-w-6xl w-full rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 p-4 text-white"
+      class="max-w-6xl w-full rounded-2xl bg-white/20 border border-white/20 p-4 text-white"
     >
       <h1
         v-if="selected.title"
-        class="text-xl md:text-2xl font-bold tracking-tight max-h-16 overflow-y-auto"
+        class="text-xl md:text-2xl font-bold tracking-tight line-clamp-2 md:line-clamp-3"
       >
         {{ selected.title }}
       </h1>
 
       <p class="text-sm text-white/80 mt-1">
         by
-        <span class="font-medium text-cyan-300">
+        <span class="font-medium text-info">
           {{ selected.author || "Anonymous" }}
+        </span>
+      </p>
+
+      <p class="text-xs text-white/60 mt-1">
+        Uploaded at
+        <span class="font-medium text-success">
+          <TimeStamp :timestamp="selected.created_at" />
         </span>
       </p>
 
@@ -44,7 +51,7 @@
     <div class="flex justify-center gap-2">
       <button
         @click="emit('close')"
-        class="btn btn-sm bg-error text-white border-none shadow-lg"
+        class="btn btn-sm btn-error border-none shadow-lg"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -61,14 +68,14 @@
       </button>
       <button
         @click="shareMedia"
-        class="btn btn-sm bg-info text-white border-none shadow-lg"
+        class="btn btn-sm btn-info border-none shadow-lg"
       >
         Share
       </button>
 
       <button
         @click="downloadMedia"
-        class="btn btn-sm bg-success text-white border-none shadow-lg"
+        class="btn btn-sm btn-success border-none shadow-lg"
       >
         Download
       </button>
@@ -77,6 +84,8 @@
 </template>
 
 <script setup>
+  import TimeStamp from "@/components/TimeStamp.vue";
+
   const props = defineProps(["selected"]);
   const emit = defineEmits(["close"]);
 
